@@ -43,4 +43,11 @@
         <framework src="CoreImage.framework"/>
         <framework src="ImageIO.framework"/>
     </platform>
+
+    <!-- windows -->
+    <platform name="windows">
+        <js-module src="src/windows/ThumbnailProxy.js" name="ThumbnailProxy">
+            <merges target="" />
+        </js-module>
+    </platform>
 </plugin>
