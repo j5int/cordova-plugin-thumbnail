@@ -79,8 +79,6 @@ public class Thumbnails {
         OutputStream os = null;
 
         try {
-            // File targetFile = new File(targetPath);
-            // targetFile.createNewFile();
             os = new BufferedOutputStream(new FileOutputStream(targetPath));
             bitmap.compress(getOutputFormat(thumbnailOptions), 90, os);
         } catch (FileNotFoundException ex) {
