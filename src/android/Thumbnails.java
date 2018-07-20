@@ -82,7 +82,7 @@ public class Thumbnails {
             // File targetFile = new File(targetPath);
             // targetFile.createNewFile();
             os = new BufferedOutputStream(new FileOutputStream(targetPath));
-            bitmap.compress(guessImageType(targetPath), 90, os);
+            bitmap.compress(getOutputFormat(thumbnailOptions), 90, os);
         } catch (FileNotFoundException ex) {
             throw new TargetPathNotFoundException(ex);
         } catch (IOException ex) {
@@ -102,11 +102,10 @@ public class Thumbnails {
         return false;
     }
 
-    public static Bitmap.CompressFormat guessImageType(String filePath) {
-        String fileExt = filePath.substring(filePath.lastIndexOf(".") + 1).toLowerCase();
-        if (fileExt.equals("png")) {
+    public static Bitmap.CompressFormat getOutputFormat(Options thumbnailOptions) {
+        if (thumbnailOptions.outputFormat.equals("PNG")){
             return Bitmap.CompressFormat.PNG;
-        } else if (fileExt.equals("webp")) {
+        } else if (thumbnailOptions.outputFormat.equals("WEBP")) {
             return Bitmap.CompressFormat.WEBP;
         } else {
             return Bitmap.CompressFormat.JPEG;
@@ -116,6 +115,7 @@ public class Thumbnails {
     public static class Options {
         public String targetPath;
         public String sourcePath;
+        public String outputFormat;
         public int maxPixelSize;
         public int compression;
 

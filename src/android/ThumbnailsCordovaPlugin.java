@@ -93,6 +93,7 @@ public class ThumbnailsCordovaPlugin extends CordovaPlugin {
         boolean hasTargetPath = args.length() >= 3;
         Thumbnails.Options options = new Thumbnails.Options();
         options.sourcePath = args.getString(0).replace("file://", "");
+        options.outputFormat = args.getString(4);
         if (hasTargetPath) {
             options.targetPath = args.getString(1).replace("file://", "");
             options.maxPixelSize = args.getInt(2);

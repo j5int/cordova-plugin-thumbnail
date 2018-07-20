@@ -11,11 +11,23 @@ function options2Args(options) {
     if(!options.compression) {
         options.compression = 90;
     }
+    
+    if(!options.outputFormat && options.targetPath) {
+        var ext = options.targetPath.split(".").pop().lower()
+        if (ext === 'png'){
+            options.outputFormat = 'PNG';
+        } else if (ext === 'webp'){
+            options.outputFormat = 'WEBP'
+        } else {
+            options.outputFormat = 'JPG'
+        }
+        
+    }
 
     if (!options.targetPath) {
-        return [options.srcPath, options.maxPixelSize, options.compression];
+        return [options.srcPath, options.maxPixelSize, options.compression, "JPG"];
     } else {
-        return [options.srcPath, options.targetPath, options.maxPixelSize, options.compression];
+        return [options.srcPath, options.targetPath, options.maxPixelSize, options.compression, options.outputFormat];
     }
 }
 
