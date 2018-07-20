@@ -68,7 +68,7 @@
 
 @implementation Thumbnail
 
-+ (void) thumbnail:(NSString *)imageURL size:(CGFloat)maxSize toURL:(NSString *) toURL compression:(CGFloat) compressionQuality
++ (void) thumbnail:(NSString *)imageURL size:(CGFloat)maxSize toURL:(NSString *) toURL compression:(CGFloat) compressionQuality outputFormat:(NSString *) outputFormat
 {
 
     NSURL* _imageURL = [NSURL URLWithString: imageURL];
@@ -76,7 +76,11 @@
     UIImage *uiImage = [self thumbnailWithContentsOfURL:_imageURL maxPixelSize:maxSize];
     if(uiImage) {
         NSError *writeError = nil;
-        [UIImageJPEGRepresentation(uiImage, compressionQuality) writeToFile:toURL options:NSDataWritingAtomic error:&writeError];
+        if([outputFormat isEqualToString:@"PNG"]){
+            [UIImagePNGRepresentation(uiImage) writeToFile:toURL options:NSDataWritingAtomic error:&writeError];
+        } else {
+            [UIImageJPEGRepresentation(uiImage, compressionQuality) writeToFile:toURL options:NSDataWritingAtomic error:&writeError];
+        }
         if (writeError) {
             NSLog(@"Failed to write image: %@", writeError);
         }
@@ -117,10 +121,13 @@
         CGFloat size = [self getMaxSize: command];
 
         NSNumber* compressionPercent = nil;
-        if ([command.arguments count] == 2) {
+        NSString* outputFormat = nil;
+        if ([command.arguments count] == 3) {
             compressionPercent = [command.arguments objectAtIndex:2];
+            outputFormat = [command.arguments objectAtIndex:3];
         } else {
             compressionPercent = [command.arguments objectAtIndex:3];
+            outputFormat = [command.arguments objectAtIndex:4];
         }
         CGFloat compressionQuality = [compressionPercent floatValue] / 100;
 
@@ -131,7 +138,7 @@
         }
 
         [FileUtil createFileAtURL: targetURL];
-        [Thumbnail thumbnail:sourceURL size: size toURL:targetURL compression: compressionQuality];
+        [Thumbnail thumbnail:sourceURL size: size toURL:targetURL compression: compressionQuality outputFormat: outputFormat];
 
         CDVPluginResult* pluginResult = nil;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
