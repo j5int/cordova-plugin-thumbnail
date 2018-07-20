@@ -173,30 +173,6 @@ function getFilesystemFromURL(url) {
     return res;
 }
 
-function writeBlobAsync(storageFile, data, position) {
-    return storageFile.openAsync(Windows.Storage.FileAccessMode.readWrite)
-        .then(function (output) {
-            output.seek(position);
-            var dataSize = data.size;
-            var input = (data.detachStream || data.msDetachStream).call(data);
-
-            // Copy the stream from the blob to the File stream
-            return Windows.Storage.Streams.RandomAccessStream.copyAsync(input, output)
-                .then(function () {
-                    output.size = position + dataSize;
-                    return output.flushAsync().then(function () {
-                        input.close();
-                        output.close();
-
-                        return dataSize;
-                    });
-                });
-        });
-}
-
-function writeArrayBufferAsync(storageFile, data, position) {
-    return writeBlobAsync(storageFile, new Blob([data]), position); // eslint-disable-line no-undef
-}
 
 function makeThumbnail(win, fail, args) {
     var srcPath, targetPath, maxPixelSize, compression, outputFormat;
@@ -237,28 +213,39 @@ function makeThumbnail(win, fail, args) {
         function (storageFile) {
             storageFile.getThumbnailAsync(thumbnailMode, maxPixelSize, thumbnailOptions).done(function (thumbnail) {
                 if (thumbnail) {
-                    var readSize = thumbnail.size;
-                    var buffer = new Windows.Storage.Streams.Buffer(readSize);
-                    var options = Windows.Storage.Streams.InputStreamOptions.None;
-                    thumbnail.readAsync(buffer, readSize, options).done(
-                        function (buffer) {
-                            getFolderFromPathAsync(wTargetDirPath).done(
-                                function (targetFolder) {
-                                    targetFolder.createFileAsync(targetFileName, Windows.Storage.CreationCollisionOption.openIfExists).done(
-                                        function (targetFile) {
-                                            var myArray = new Uint8Array(buffer.length);
-
-                                            var dataReader = Windows.Storage.Streams.DataReader.fromBuffer(buffer);
-                                            dataReader.readBytes(myArray)
-                                            dataReader.close();
-                                            writeArrayBufferAsync(targetFile, myArray.buffer, 0).done(
-                                                function (bytesWritten) {
-                                                    win(targetPath);
-                                                },
-                                                function () {
-                                                    fail({code: 5, message: "Failed to write out thumbnail to target path."});
+                    Windows.Graphics.Imaging.BitmapDecoder.createAsync(thumbnail).done(
+                        function (decoder){
+                            decoder.getSoftwareBitmapAsync().done(
+                                function (softwareBitmap){
+                                    getFolderFromPathAsync(wTargetDirPath).done(
+                                        function (targetFolder) {
+                                            targetFolder.createFileAsync(targetFileName, Windows.Storage.CreationCollisionOption.openIfExists).done(
+                                                function (targetFile) {
+                                                    targetFile.openAsync(Windows.Storage.FileAccessMode.readWrite).then(
+                                                        function(output){
+                                                            var encoderId;
+                                                            switch (outputFormat) {
+                                                                case "PNG":
+                                                                    encoderId = Windows.Graphics.Imaging.BitmapEncoder.pngEncoderId;
+                                                                    break;
+                                                                default:
+                                                                    encoderId = Windows.Graphics.Imaging.BitmapEncoder.jpegEncoderId;
+                                                                    break;
+                                                            }
+                                                            Windows.Graphics.Imaging.BitmapEncoder.createAsync(encoderId, output).done(
+                                                                function (encoder){
+                                                                    encoder.setSoftwareBitmap(softwareBitmap);
+                                                                    encoder.flushAsync().done(
+                                                                        function (result){
+                                                                             win(targetPath);
+                                                                        }
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    )
                                                 }
-                                            );
+                                            )
                                         }
                                     )
                                 }
