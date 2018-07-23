@@ -40,15 +40,6 @@ WinFS.prototype.__format__ = function (fullPath) {
     return 'cdvfile://localhost' + path;
 };
 
-var windowsPaths = {
-    dataDirectory: 'ms-appdata:///local/',
-    cacheDirectory: 'ms-appdata:///temp/',
-    tempDirectory: 'ms-appdata:///temp/',
-    syncedDataDirectory: 'ms-appdata:///roaming/',
-    applicationDirectory: 'ms-appx:///',
-    applicationStorageDirectory: 'ms-appx:///'
-};
-
 var AllFileSystems;
 
 function getAllFS() {
