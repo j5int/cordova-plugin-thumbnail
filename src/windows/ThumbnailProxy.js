@@ -110,7 +110,7 @@ function getFilesystemFromPath(path) {
 
 var msapplhRE = new RegExp('^ms-appdata://localhost/');
 
-function (url) {
+function pathFromURL(url) {
     url = url.replace(msapplhRE, 'ms-appdata:///');
     var path = decodeURIComponent(url);
     // support for file name with parameters
