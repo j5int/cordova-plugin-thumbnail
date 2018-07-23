@@ -19,6 +19,7 @@ cordova plugin add https://github.com/almas/cordova-plugin-thumbnail.git
   - `maxPixelSize`: Maximum width or height of thumbnail in pixels (default value: 120)
   - `targetPath` Thumbnail path. If not specified, will randomly create a file to store the generated thumbnail.
   - `compression` The quality of the resulting image, expressed as a value from 0 to 100. The value 0 represents the maximum compression (or lowest quality) while the value 100 represents the least compression (or best quality). (default value: 90)
+  - `outputFormat` The format that the thumbnail will be generated in, valid options being PNG and JPG. (default format: JPG)
 - `successCallbackFn` Thumbnail generates a successful callback function
 - `failCallbackFn` Thumbnail Generation Failed Callback Function
 
