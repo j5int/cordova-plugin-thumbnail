@@ -15,8 +15,7 @@ function cordovaPathToNative(path) {
 }
 
 function nativePathToCordova(path) {
-    var cleanPath = path.replace(/\\/g, '/');
-    return cleanPath;
+    return path.replace(/\\/g, '/');
 }
 
 var driveRE = new RegExp("^[/]*([A-Z]:)");
