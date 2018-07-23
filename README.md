@@ -1,6 +1,6 @@
 # cordova-plugin-thumbnail
 
-This plug-in implements the ability to generate image thumbnails for Cordova project. Support Android and iOS.
+This plug-in implements the ability to generate image thumbnails for Cordova project. Support Android, iOS, and Windows.
 
 # Installation
 
