@@ -1,7 +1,5 @@
 /* global Windows, WinJS, MSApp */
 
-var utils = require('cordova/utils');
-
 var getFolderFromPathAsync = Windows.Storage.StorageFolder.getFolderFromPathAsync;
 var getFileFromPathAsync = Windows.Storage.StorageFile.getFileFromPathAsync;
 
@@ -30,13 +28,6 @@ var WinFS = function (name, root) {
         root.nativeURL = 'file://' + sanitize(this.winpath + root.fullPath).replace(':', '%3A');
     }
     WinFS.__super__.constructor.call(this, name, root);
-};
-
-utils.extend(WinFS, FileSystem);
-
-WinFS.prototype.__format__ = function (fullPath) {
-    var path = sanitize('/' + this.name + (fullPath[0] === '/' ? '' : '/') + FileSystem.encodeURIPath(fullPath));
-    return 'cdvfile://localhost' + path;
 };
 
 var AllFileSystems;
