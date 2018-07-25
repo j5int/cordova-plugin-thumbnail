@@ -1,6 +1,6 @@
 {
     "name": "cordova-plugin-thumbnail",
-    "version": "1.0.0",
+    "version": "1.0.0-j5.1",
     "description": "Image thumbnail generator for Cordova project",
     "cordova": {
         "id": "cordova-plugin-thumbnail",
