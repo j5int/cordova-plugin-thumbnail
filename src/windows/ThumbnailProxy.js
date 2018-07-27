@@ -233,28 +233,41 @@ function makeThumbnail(win, fail, args) {
                                                                     encoder.setSoftwareBitmap(softwareBitmap);
                                                                     encoder.flushAsync().done(
                                                                         function (result){
-                                                                             win(targetPath);
-                                                                        }
-                                                                    )
-                                                                }
-                                                            )
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    )
-                                }
-                            )
-                        }
-                    )
+                                                                            win(targetPath);
+                                                                        }, function (error) {
+                                                                            fail({
+                                                                                code: 4,
+                                                                                message: "Failed to create thumbnail."
+                                                                            });
+                                                                        })
+                                                                }, function (error) {
+                                                                    fail({
+                                                                        code: 10,
+                                                                        message: "Failed to create bitmap encoder."
+                                                                    });
+                                                                })
+                                                        }, function (error) {
+                                                            fail({code: 9, message: "Failed to open target file."});
+                                                        })
+                                                }, function (error) {
+                                                    fail({code: 8, message: "Failed to create target file."});
+                                                })
+                                        }, function (error) {
+                                            fail({code: 7, message: "Failed to get target folder."});
+                                        })
+                                }, function (error) {
+                                    fail({code: 6, message: "Failed to create software bitmap."});
+                                })
+                        }, function (error) {
+                            fail({code: 5, message: "Failed to create bitmap decoder."});
+                        })
                 } else {
                     fail({code: 4, message: "Failed to create thumbnail."});
                 }
             }, function (error) {
                 fail({code: 4, message: "Failed to create thumbnail."});
             });
-        }, function () {
+        }, function (error) {
             fail({code: 2, message: "File not found"});
         }
     );
