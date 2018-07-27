@@ -137,6 +137,11 @@
             return;
         }
 
+        if([outputFormat isEqualToString:@"WEBP"]){
+            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"WEBP is not supported on iOS."];
+            [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+        }
+
         [FileUtil createFileAtURL: targetURL];
         [Thumbnail thumbnail:sourceURL size: size toURL:targetURL compression: compressionQuality outputFormat: outputFormat];
 
