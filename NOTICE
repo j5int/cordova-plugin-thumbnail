@@ -1,0 +1,5 @@
+cordova-plugin-thumbnail
+Copyright 2018 The Apache Software Foundation
+
+This software contains code derived from the cordova-plugin-file library (version 6.0.1).
+cordova-plugin-file is released under the Apache License version 2 (see LICENSE-APACHE file).
