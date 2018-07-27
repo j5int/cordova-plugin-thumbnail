@@ -133,10 +133,12 @@
 
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if ([fileManager fileExistsAtPath:targetURL]) {
-            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Target file already exists."];
+            NSDictionary *message = @{@"code":@11,@"message": @"Target file already exists."};
+            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:message];
             [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
         } else if([outputFormat isEqualToString:@"WEBP"]){
-            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"WEBP is not supported on iOS."];
+            NSDictionary *message = @{@"code":@12,@"message": @"WEBP is not supported on iOS."};
+            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:message];
             [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
         } else {
             [FileUtil createFileAtURL: targetURL];
