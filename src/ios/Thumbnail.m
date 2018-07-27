@@ -133,23 +133,21 @@
 
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if ([fileManager fileExistsAtPath:targetURL]) {
-            NSLog(@"Thumbnail file already exists %@", targetURL);
-            return;
-        }
-
-        if([outputFormat isEqualToString:@"WEBP"]){
+            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Target file already exists."];
+            [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+        } else if([outputFormat isEqualToString:@"WEBP"]){
             CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"WEBP is not supported on iOS."];
             [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+        } else {
+            [FileUtil createFileAtURL: targetURL];
+            [Thumbnail thumbnail:sourceURL size: size toURL:targetURL compression: compressionQuality outputFormat: outputFormat];
+
+            CDVPluginResult* pluginResult = nil;
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                             messageAsString:targetURL];
+
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
-
-        [FileUtil createFileAtURL: targetURL];
-        [Thumbnail thumbnail:sourceURL size: size toURL:targetURL compression: compressionQuality outputFormat: outputFormat];
-
-        CDVPluginResult* pluginResult = nil;
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                         messageAsString:targetURL];
-
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 }
 
